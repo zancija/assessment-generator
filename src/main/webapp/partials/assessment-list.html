@@ -1,0 +1,38 @@
+<div class="container">
+    <h3>List of Assessments</h3>
+
+    <div class="pull-left">
+        <button class="btn btn-primary" ng-click="openAssessment('new')" data-toggle="modal" href="#editModal">
+            Create New Assessment
+        </button>
+    </div>
+    <div class="pull-right"><input type="text" ng-model="query" class="form-control" placeholder="Search&hellip;"></div>
+    <table class='table table-striped'>
+        <thead>
+        <tr>
+            <th>Assessment</th>
+            <th>Number of Questions</th>
+            <th>&nbsp;</th>
+            <th>&nbsp;</th>
+            <th>&nbsp;</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat='assessment in assessments | filter:query'>
+            <td>{{assessment.name}}</td>
+            <td>{{assessment.questions.length}}</td>
+            <td>
+                <button role='button' class='btn btn-success' ng-click="startAssessment(assessment.id)">
+                    <i class="glyphicon glyphicon-list-alt"></i> Start Assessment
+                </button>
+            </td>
+            <td>
+                <button role='button' class='btn' ng-click="openAssessment(assessment.id)">Edit</button>
+            </td>
+            <td>
+                <button role='button' class='btn btn-danger' ng-click="remove($index)">Delete</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

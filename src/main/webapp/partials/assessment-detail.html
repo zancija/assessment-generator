@@ -1,0 +1,67 @@
+<div class="container">
+    <h3 ng-hide='assessment.id === null'>Edit Assessment: {{assessment.name}}</h3>
+
+    <h3 ng-show='assessment.id === null'>New Assessment</h3>
+
+    <form class="form-horizontal" role="form" name="form" novalidate>
+        <div class="form-group" ng-class="{'has-error' : submitted && form.name.$invalid}">
+            <label for="name" class="control-label">Name:</label>
+            <input type="text" class="form-control" name="name" id="name" placeholder="Enter assessment name"
+                   ng-model="assessment.name" required/>
+            <span ng-show="submitted && form.name.$invalid"
+                  class="help-inline">Assessment name is required</span>
+        </div>
+        <div ng-repeat="question in assessment.questions" ng-form="questionForm">
+            <div class="form-group"
+                 ng-class="{'has-error' : submitted && questionForm.questionText.$invalid}">
+                <label for="questionText" class="control-label">Question {{question.number}}</label>
+                <select ng-options="key as value for (key,value) in questionTypeMap"
+                        ng-model="question.questionType" ng-change="changeQuestionType($index)"></select>
+                <i class="glyphicon glyphicon-remove" ng-show="assessment.questions.length > 1"
+                   ng-click="removeQuestion($index)"></i>
+                </br>
+                </br>
+                <textarea class="form-control" rows="1" class="form-control" id="questionText"
+                          placeholder="Enter question text"
+                          ng-model="question.text" name="questionText" required></textarea>
+                <span ng-show="submitted && questionForm.questionText.$invalid"
+                      class="help-inline">Question text is required</span>
+            </div>
+            <div id="answers" class="form-group">
+                <label>Answers:</label>
+                </br>
+                <span ng-show="submitted && question.questionType == questionTypes.multipleSelect && getNumberOfCorrectAnswers(question.answers) != 1"
+                      class="help-inline">Please select one correct answer.</span>
+                <span ng-show="submitted && question.questionType == questionTypes.multipleChoice && getNumberOfCorrectAnswers(question.answers) < 1"
+                      class="help-inline">Please select at least one correct answer.</span>
+                <span ng-show="submitted && question.questionType != questionTypes.shortAnswer && question.answers.length < 2"
+                      class="help-inline">Please enter at least two answers.</span>
+                <div ng-repeat="answer in question.answers" ng-form="answerForm"
+                     ng-class="{'has-error' : submitted && answerForm.answerText.$invalid}">
+                    <div class="checkbox" ng-hide="question.questionType == questionTypes.shortAnswer">
+                        <label><input type="checkbox" ng-model="answer.correct">Correct answer </label>
+                        <i class="glyphicon glyphicon-remove" ng-show="question.answers.length > 1"
+                           ng-click="removeAnswer($index, question.number)"></i>
+                    </div>
+                    <input type="text" class="form-control" name="answerText" placeholder="Enter answer"
+                           ng-model="answer.text" required>
+                     <span ng-show="submitted && answerForm.answerText.$invalid"
+                           class="help-inline">Answer text is required</span>
+                </div>
+                </br>
+                <div>
+                    <button ng-hide="question.questionType == questionTypes.shortAnswer" class="btn btn-primary"
+                            ng-click="addAnswer($index)">Add answer
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div>
+            <button class="btn btn-primary" ng-click="addQuestion()">Add question</button>
+        </div>
+        <div class="pull-right">
+            <button type='submit' class="btn btn-primary" ng-click="save()">Save</button>
+            <button class="btn btn-danger" ng-click="goBack()">Cancel</button>
+        </div>
+    </form>
+</div>
