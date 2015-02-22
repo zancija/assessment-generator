@@ -1,5 +1,5 @@
 /target
-/bower_components
+**/bower_components
 **/.idea/workspace.xml
 **/.idea/tasks.xml
 # Object files
